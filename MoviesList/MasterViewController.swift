@@ -50,6 +50,9 @@ class MasterViewController: UITableViewController {
         let entry = entries[indexPath.row]
         cell.textLabel!.text = entry["title"]?["label"] as? String
         cell.detailTextLabel?.text = entry["summary"]?["label"] as? String
+        if let images = entry["im:image"] as? [[String:AnyObject]], url = images[0]["label"] as? String where images.count > 0 {
+            print("What's up?")
+        }
         return cell
     }
 
