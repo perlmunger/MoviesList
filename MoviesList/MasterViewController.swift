@@ -129,9 +129,9 @@ extension Dictionary where Key: StringLiteralConvertible, Value: AnyObject {
     
     var imageUrls : [String]? {
         if let images = self["im:image"] as? [[String:AnyObject]] {
-            let urls = images.flatMap({ (imageDictionary) -> String? in
+            let urls = images.map({ (imageDictionary) -> String in
                 guard let label = imageDictionary["label"] as? String else {
-                    return nil
+                    return ""
                 }
                 return label
                 
