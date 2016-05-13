@@ -61,6 +61,20 @@ class MasterViewController: UITableViewController {
         }
         return cell
     }
+    
+    func downlaodImageAtUrl(urlString:String, completion:(() -> ())?) {
+        if let url = NSURL(string: urlString) {
+            let task = NSURLSession.sharedSession().dataTaskWithURL(url, completionHandler: { (data, response, error) in
+                if let data = data where error == nil {
+                    if let image = UIImage(data: data) {
+                        self.imageCache[urlString] = image
+                        completion?()
+                    }
+                }
+            })
+            task.resume()
+        }
+    }
 
     func downloadFeed() {
         let url = NSURL(string: "https://itunes.apple.com/us/rss/topmovies/limit=50/json")
