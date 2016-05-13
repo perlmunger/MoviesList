@@ -49,6 +49,7 @@ class MasterViewController: UITableViewController {
 
         let entry = entries[indexPath.row]
         cell.textLabel!.text = entry["title"]?["label"] as? String
+        cell.detailTextLabel?.text = entry["summary"]?["label"] as? String
         return cell
     }
 
