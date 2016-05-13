@@ -108,18 +108,16 @@ class MasterViewController: UITableViewController {
 
 extension Dictionary where Key: StringLiteralConvertible, Value: AnyObject {
     var title : String {
-        return self.valueForString("title")
+        guard let titileDictionary = self["title"] as? [String:AnyObject], title = titileDictionary["label"] as? String else {
+            return ""
+        }
+        return title
     }
     
     var summary : String {
-        return self.valueForString("summary")
-    }
-    
-    func valueForString(key:Key) -> String {
-        guard let contentDictionary = self[key] as? [String:AnyObject], content = contentDictionary["label"] as? String else {
+        guard let summaryDictionary = self["summary"] as? [String:AnyObject], summary = summaryDictionary["label"] as? String else {
             return ""
         }
-        return content
+        return summary
     }
-
 }
