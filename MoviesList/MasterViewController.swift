@@ -51,5 +51,9 @@ class MasterViewController: UITableViewController {
         return cell
     }
 
+    func downloadFeed() {
+        let url = NSURL(string: "https://itunes.apple.com/us/rss/topmovies/limit=50/json")
+        
+    }
 }
 
