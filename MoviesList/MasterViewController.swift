@@ -119,7 +119,19 @@ extension Dictionary where Key: StringLiteralConvertible, Value: AnyObject {
     var firstImageUrl : String? {
         return self.imageUrls?.first
     }
+
+    var releaseDate : NSDate? {
+        return self.releaseDateWithFormatter(NSDateFormatter.dataFormatter)
+    }
     
+    func releaseDateWithFormatter(formatter:NSDateFormatter) -> NSDate? {
+        let dateString = self.valueForString("im:releaseDate")
+        if let date = formatter.dateFromString(dateString) {
+            return date
+        }
+
+        return nil
+    }
     
     // MARK: Utility
     func valueForString(key:Key) -> String {
@@ -142,5 +154,22 @@ extension Dictionary where Key: StringLiteralConvertible, Value: AnyObject {
         }
         return nil
     }
+}
 
+extension NSDateFormatter {
+    static var dataFormatter : NSDateFormatter {
+        get {
+            let formatter = NSDateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+            return formatter
+        }
+    }
+    
+    static var prettyFormatter : NSDateFormatter {
+        get {
+            let formatter = NSDateFormatter()
+            formatter.dateStyle = NSDateFormatterStyle.ShortStyle
+            return formatter
+        }
+    }
 }
