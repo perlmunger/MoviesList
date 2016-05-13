@@ -11,7 +11,7 @@ import UIKit
 class MasterViewController: UITableViewController {
 
     var detailViewController: DetailViewController? = nil
-    var objects = [AnyObject]()
+    var entries = [[String:AnyObject]]()
 
 
     override func viewDidLoad() {
@@ -29,7 +29,7 @@ class MasterViewController: UITableViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showDetail" {
             if let indexPath = self.tableView.indexPathForSelectedRow {
-                let object = objects[indexPath.row] as! NSDate
+                let object = entries[indexPath.row]
                 let controller = (segue.destinationViewController as! UINavigationController).topViewController as! DetailViewController
                 controller.detailItem = object
                 controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
@@ -41,13 +41,13 @@ class MasterViewController: UITableViewController {
     // MARK: - Table View
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return objects.count
+        return entries.count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
 
-        let object = objects[indexPath.row] as! NSDate
+        let object = entries[indexPath.row]
         cell.textLabel!.text = object.description
         return cell
     }
@@ -59,7 +59,9 @@ class MasterViewController: UITableViewController {
             if let data = data where error == nil {
                 do {
                     if let records = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String:AnyObject] {
-                        print("Stop right there")
+                        if let feed = records["feed"] as? [String:AnyObject], entries = feed["entry"] as? [[String:AnyObject]] {
+                            self.entries = entries
+                        }
                     }
                 } catch {
                     
