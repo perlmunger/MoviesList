@@ -55,7 +55,7 @@ class MasterViewController: UITableViewController {
         let url = NSURL(string: "https://itunes.apple.com/us/rss/topmovies/limit=50/json")
         
         let task = NSURLSession.sharedSession().dataTaskWithURL(url!) { (data, response, error) in
-            if let data = data where error != nil {
+            if let data = data where error == nil {
                 
             }
         }
