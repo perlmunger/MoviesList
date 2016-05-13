@@ -16,6 +16,7 @@ class MasterViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.downloadFeed()
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -65,6 +66,8 @@ class MasterViewController: UITableViewController {
                 }
             }
         }
+        
+        task.resume()
     }
 }
 
