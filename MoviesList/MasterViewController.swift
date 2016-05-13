@@ -56,6 +56,11 @@ class MasterViewController: UITableViewController {
             if let image = imageCache[url] {
                 cell.imageView?.image = image
             } else {
+                self.downlaodImageAtUrl(url, completion: { 
+                    dispatch_async(dispatch_get_main_queue(), { 
+                        self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+                    })
+                })
                 
             }
         }
