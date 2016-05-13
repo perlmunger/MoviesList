@@ -168,20 +168,19 @@ extension Dictionary where Key: StringLiteralConvertible, Value: AnyObject {
     }
 }
 
+let gDateFormatter = NSDateFormatter()
 extension NSDateFormatter {
     static var dataFormatter : NSDateFormatter {
         get {
-            let formatter = NSDateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-            return formatter
+            gDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+            return gDateFormatter
         }
     }
     
     static var prettyFormatter : NSDateFormatter {
         get {
-            let formatter = NSDateFormatter()
-            formatter.dateStyle = NSDateFormatterStyle.ShortStyle
-            return formatter
+            gDateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
+            return gDateFormatter
         }
     }
 }
