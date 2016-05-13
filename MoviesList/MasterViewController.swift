@@ -47,20 +47,24 @@ class MasterViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
 
-        let object = entries[indexPath.row]
-        cell.textLabel!.text = object.description
+        let entry = entries[indexPath.row]
+        cell.textLabel!.text = entry["title"]?["label"] as? String
         return cell
     }
 
     func downloadFeed() {
         let url = NSURL(string: "https://itunes.apple.com/us/rss/topmovies/limit=50/json")
         
-        let task = NSURLSession.sharedSession().dataTaskWithURL(url!) { (data, response, error) in
+        let task = NSURLSession.sharedSession().dataTaskWithURL(url!) { [weak self] (data, response, error) in
             if let data = data where error == nil {
                 do {
                     if let records = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String:AnyObject] {
                         if let feed = records["feed"] as? [String:AnyObject], entries = feed["entry"] as? [[String:AnyObject]] {
-                            self.entries = entries
+                            self?.entries = entries
+                            
+                            dispatch_async(dispatch_get_main_queue(), { 
+                                self?.tableView.reloadData()
+                            })
                         }
                     }
                 } catch {
