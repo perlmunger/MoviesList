@@ -50,8 +50,8 @@ class MasterViewController: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
 
         let entry = entries[indexPath.row]
-        cell.textLabel!.text = entry["title"]?["label"] as? String
-        cell.detailTextLabel?.text = entry["summary"]?["label"] as? String
+        cell.textLabel!.text = entry.title
+        cell.detailTextLabel?.text = entry.summary
         if let images = entry["im:image"] as? [[String:AnyObject]], url = images[0]["label"] as? String where images.count > 0 {
             if let image = imageCache[url] {
                 cell.imageView?.image = image
@@ -106,3 +106,20 @@ class MasterViewController: UITableViewController {
     }
 }
 
+extension Dictionary where Key: StringLiteralConvertible, Value: AnyObject {
+    var title : String {
+        return self.valueForString("title")
+    }
+    
+    var summary : String {
+        return self.valueForString("summary")
+    }
+    
+    func valueForString(key:Key) -> String {
+        guard let contentDictionary = self[key] as? [String:AnyObject], content = contentDictionary["label"] as? String else {
+            return ""
+        }
+        return content
+    }
+
+}
