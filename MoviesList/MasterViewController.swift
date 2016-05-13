@@ -51,7 +51,7 @@ class MasterViewController: UITableViewController {
 
         let entry = entries[indexPath.row]
         cell.textLabel!.text = entry.title
-        cell.detailTextLabel?.text = entry.summary
+        cell.detailTextLabel?.text = entry.summaryWithReleaseDate
         if let url = entry.firstImageUrl {
             if let image = imageCache[url] {
                 cell.imageView?.image = image
@@ -89,7 +89,10 @@ class MasterViewController: UITableViewController {
                     if let records = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String:AnyObject] {
                         if let feed = records["feed"] as? [String:AnyObject], entries = feed["entry"] as? [[String:AnyObject]] {
                             self?.entries = entries.sort({ (entry1, entry2) -> Bool in
-                                return entry1.title < entry2.title
+                                guard let releaseDate1 = entry1.releaseDate, releaseDate2 = entry2.releaseDate else {
+                                    return false
+                                }
+                                return releaseDate1 < releaseDate2
                             })
                             
                             dispatch_async(dispatch_get_main_queue(), { 
@@ -122,6 +125,15 @@ extension Dictionary where Key: StringLiteralConvertible, Value: AnyObject {
 
     var releaseDate : NSDate? {
         return self.releaseDateWithFormatter(NSDateFormatter.dataFormatter)
+    }
+    
+    var summaryWithReleaseDate : String {
+        var summary = ""
+        if let releaseDate = self.releaseDate {
+            summary = NSDateFormatter.prettyFormatter.stringFromDate(releaseDate)
+        }
+
+        return "(\(summary)) \(self.summary)"
     }
     
     func releaseDateWithFormatter(formatter:NSDateFormatter) -> NSDate? {
@@ -172,4 +184,16 @@ extension NSDateFormatter {
             return formatter
         }
     }
+}
+
+func >(date1:NSDate, date2:NSDate) -> Bool {
+    return date1.compare(date2) == NSComparisonResult.OrderedAscending
+}
+
+func <(date1:NSDate, date2:NSDate) -> Bool {
+    return date1.compare(date2) == NSComparisonResult.OrderedDescending
+}
+
+func ==(date1:NSDate, date2:NSDate) -> Bool {
+    return date1.compare(date2) == NSComparisonResult.OrderedSame
 }
