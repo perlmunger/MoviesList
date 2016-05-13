@@ -56,7 +56,13 @@ class MasterViewController: UITableViewController {
         
         let task = NSURLSession.sharedSession().dataTaskWithURL(url!) { (data, response, error) in
             if let data = data where error != nil {
-                
+                do {
+                    if let records = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String:AnyObject] {
+                        print("Stop right there")
+                    }
+                } catch {
+                    
+                }
             }
         }
     }
