@@ -52,7 +52,7 @@ class MasterViewController: UITableViewController {
         let entry = entries[indexPath.row]
         cell.textLabel!.text = entry.title
         cell.detailTextLabel?.text = entry.summary
-        if let images = entry["im:image"] as? [[String:AnyObject]], url = images[0]["label"] as? String where images.count > 0 {
+        if let url = entry.firstImageUrl {
             if let image = imageCache[url] {
                 cell.imageView?.image = image
             } else {
@@ -61,7 +61,6 @@ class MasterViewController: UITableViewController {
                         self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
                     })
                 })
-                
             }
         }
         return cell
@@ -115,11 +114,31 @@ extension Dictionary where Key: StringLiteralConvertible, Value: AnyObject {
         return self.valueForString("summary")
     }
     
+    var firstImageUrl : String? {
+        return self.imageUrls?.first
+    }
+    
+    
+    // MARK: Utility
     func valueForString(key:Key) -> String {
         guard let contentDictionary = self[key] as? [String:AnyObject], content = contentDictionary["label"] as? String else {
             return ""
         }
         return content
+    }
+    
+    var imageUrls : [String]? {
+        if let images = self["im:image"] as? [[String:AnyObject]] {
+            let urls = images.flatMap({ (imageDictionary) -> String? in
+                guard let label = imageDictionary["label"] as? String else {
+                    return nil
+                }
+                return label
+                
+            })
+            return urls
+        }
+        return nil
     }
 
 }
