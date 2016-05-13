@@ -88,7 +88,9 @@ class MasterViewController: UITableViewController {
                 do {
                     if let records = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String:AnyObject] {
                         if let feed = records["feed"] as? [String:AnyObject], entries = feed["entry"] as? [[String:AnyObject]] {
-                            self?.entries = entries
+                            self?.entries = entries.sort({ (entry1, entry2) -> Bool in
+                                return entry1.title < entry2.title
+                            })
                             
                             dispatch_async(dispatch_get_main_queue(), { 
                                 self?.tableView.reloadData()
