@@ -40,6 +40,8 @@ class MasterViewController: UITableViewController {
 
     // MARK: - Table View
 
+    var imageCache = [String:UIImage]()
+    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return entries.count
     }
@@ -51,7 +53,11 @@ class MasterViewController: UITableViewController {
         cell.textLabel!.text = entry["title"]?["label"] as? String
         cell.detailTextLabel?.text = entry["summary"]?["label"] as? String
         if let images = entry["im:image"] as? [[String:AnyObject]], url = images[0]["label"] as? String where images.count > 0 {
-            print("What's up?")
+            if let image = imageCache[url] {
+                cell.imageView?.image = image
+            } else {
+                
+            }
         }
         return cell
     }
